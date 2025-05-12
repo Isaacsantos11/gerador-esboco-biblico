@@ -1,30 +1,29 @@
+// api/gerar-esboco.js
 const fetch = require('node-fetch');
 
-export default async function handler(req, res) {
-  const apiKey = process.env.OPENAI_API_KEY;  // A chave API do OpenAI, configurada no Vercel
+module.exports = async (req, res) => {
+  const { mensagem } = req.body;
 
-  if (req.method === 'POST') {
-    try {
-      const prompt = req.body.prompt;  // O prompt enviado para a API do OpenAI
-      const response = await fetch('https://api.openai.com/v1/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: 'text-davinci-003', // Você pode alterar o modelo conforme necessário
-          prompt: prompt,
-          max_tokens: 1000,
-        }),
-      });
+  try {
+    const resposta = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        model: 'gpt-4',
+        messages: [{ role: 'user', content: mensagem }],
+        max_tokens: 500,
+      }),
+    });
 
-      const data = await response.json();
-      res.status(200).json({ result: data.choices[0].text });  // Retorna o texto gerado
-    } catch (error) {
-      res.status(500).json({ error: 'Erro ao gerar o esboço' });
-    }
-  } else {
-    res.status(405).json({ error: 'Método não permitido' });
+    const dados = await resposta.json();
+    const textoGerado = dados.choices[0]?.message?.content;
+
+    res.status(200).json({ esboco: textoGerado });
+  } catch (erro) {
+    console.error('Erro ao gerar esboço:', erro);
+    res.status(500).json({ erro: 'Erro ao gerar esboço' });
   }
-}
+};
