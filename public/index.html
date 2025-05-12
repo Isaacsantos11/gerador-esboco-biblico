@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Esboço Bíblico</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Gerador de Esboço Bíblico</h1>
+        <p>Gerando esboços para pregação de forma fácil!</p>
+    </header>
+
+    <main>
+        <button id="generateButton">Gerar Esboço</button>
+        <div id="esboçoResult"></div>
+    </main>
+
+    <footer>
+        <button onclick="window.location.href = '/'">Voltar para Página Inicial</button>
+    </footer>
+
+    <script>
+        document.getElementById('generateButton').addEventListener('click', function() {
+            fetch('/api/gerar-esboco')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('esboçoResult').innerHTML = `
+                        <h2>Esboço Gerado</h2>
+                        <p>${data.esboço}</p>
+                    `;
+                })
+                .catch(error => console.error('Erro:', error));
+        });
+    </script>
+</body>
+</html>
