@@ -1,18 +1,12 @@
 {
-  "name": "meu-projeto",
+  "name": "gerador-esboco",
   "version": "1.0.0",
-  "description": "Projeto para gerar esboços usando a OpenAI",
   "main": "index.js",
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start"
+  "license": "MIT",
+  "engines": {
+    "node": "22.x"
   },
   "dependencies": {
     "node-fetch": "^2.6.1"
-  },
-  "devDependencies": {},
-  "engines": {
-    "node": "16.x"
   }
 }
