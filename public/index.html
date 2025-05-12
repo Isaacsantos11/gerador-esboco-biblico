@@ -13,6 +13,8 @@
     </header>
 
     <main>
+        <!-- Campo de entrada para a mensagem -->
+        <textarea id="mensagemInput" placeholder="Digite o conteúdo para o esboço"></textarea>
         <button id="generateButton">Gerar Esboço</button>
         <div id="esboçoResult"></div>
     </main>
@@ -23,15 +25,26 @@
 
     <script>
         document.getElementById('generateButton').addEventListener('click', function() {
-            fetch('/api/gerar-esboco')
+            const mensagem = document.getElementById('mensagemInput').value;  // Pegando a mensagem do campo de texto
+            if (mensagem.trim() !== "") {
+                fetch('/api/gerar-esboco', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ mensagem: mensagem })
+                })
                 .then(response => response.json())
                 .then(data => {
                     document.getElementById('esboçoResult').innerHTML = `
                         <h2>Esboço Gerado</h2>
-                        <p>${data.esboço}</p>
+                        <p>${data.esboco}</p>
                     `;
                 })
                 .catch(error => console.error('Erro:', error));
+            } else {
+                alert("Por favor, insira um conteúdo para gerar o esboço.");
+            }
         });
     </script>
 </body>
