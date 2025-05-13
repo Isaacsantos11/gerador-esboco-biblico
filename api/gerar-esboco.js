@@ -1,8 +1,11 @@
-// api/gerar-esboco.js
 import fetch from 'node-fetch';
 
 export default async function handler(req, res) {
   const { mensagem } = req.body;
+
+  if (!mensagem) {
+    return res.status(400).json({ erro: 'Mensagem não fornecida.' });
+  }
 
   try {
     const resposta = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -19,9 +22,15 @@ export default async function handler(req, res) {
     });
 
     const dados = await resposta.json();
-    const textoGerado = dados.choices[0]?.message?.content;
 
+    if (!dados.choices || !dados.choices[0] || !dados.choices[0].message) {
+      console.error('Resposta inesperada da OpenAI:', dados);
+      return res.status(500).json({ erro: 'Erro ao processar resposta da OpenAI.' });
+    }
+
+    const textoGerado = dados.choices[0].message.content;
     res.status(200).json({ esboco: textoGerado });
+
   } catch (erro) {
     console.error('Erro ao gerar esboço:', erro);
     res.status(500).json({ erro: 'Erro ao gerar esboço' });
