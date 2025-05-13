@@ -1,7 +1,15 @@
 {
-  "functions": {
-    "api/gerar-esboco.js": {
-      "runtime": "nodejs16.x"
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/gerar-esboco.js",
+      "use": "@vercel/node"
     }
-  }
+  ],
+  "routes": [
+    {
+      "src": "/api/gerar-esboco",
+      "dest": "api/gerar-esboco.js"
+    }
+  ]
 }
